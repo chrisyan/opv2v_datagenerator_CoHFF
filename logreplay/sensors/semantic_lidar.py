@@ -13,8 +13,6 @@ import os
 import pickle
 import open3d as o3d
 
-import json
-
 class SemanticLidar(BaseSensor):
     def __init__(self, agent_id, vehicle, world, config, global_position):
         super().__init__(agent_id, vehicle, world, config, global_position)
@@ -100,32 +98,36 @@ class SemanticLidar(BaseSensor):
                 z=global_position[2])
             pitch = -35
 
-        if relative_position == 'left': #2
-
-            carla_location = carla.Location(x=carla_location.x + 0.0,
-                                            y=carla_location.y + 6.3,
+        if relative_position == 'head':
+            carla_location = carla.Location(x=carla_location.x + 6.0, #2.5
+                                            y=carla_location.y,
                                             z=carla_location.z + 1.8)
-            yaw = 100
+            yaw = 0 # 0
 
-        elif relative_position == 'backfirst': #1
-            carla_location = carla.Location(x=carla_location.x + 8.5, #11.0 8.5
+        elif relative_position == 'front':
+            carla_location = carla.Location(x=carla_location.x + 6.0, #2.5
                                             y=carla_location.y,
-                                            z=carla_location.z + 1.0)
-            yaw = 180
+                                            z=carla_location.z + 1.8)
+            yaw = 0 # 0
 
-        elif relative_position == 'frontlast': #4
-            carla_location = carla.Location(x=carla_location.x - 8.5, #-9.5
-                                            y=carla_location.y,
-                                            z=carla_location.z + 1.5)
+        elif relative_position == 'right':
+            carla_location = carla.Location(x=carla_location.x + 0.0,
+                                            y=carla_location.y - 6.0,
+                                            z=carla_location.z + 1.8)
             yaw = 0
 
-
-
-        elif relative_position == 'right':  # 1
-            carla_location = carla.Location(x=carla_location.x +0.0,
-                                            y=carla_location.y- 6.3,
+        elif relative_position == 'left':
+            carla_location = carla.Location(x=carla_location.x + 0.0,
+                                            y=carla_location.y + 6.0, # -0.3
                                             z=carla_location.z + 1.8)
-            yaw = -100
+            yaw = 0 #-100
+
+
+        else:
+            carla_location = carla.Location(x=carla_location.x - 6.0,
+                                            y=carla_location.y,
+                                            z=carla_location.z + 1.8)
+            yaw = 0
 
 
 
@@ -152,33 +154,129 @@ class SemanticLidar(BaseSensor):
         # these are the ids that are visible
         return vehicle_id_filter
 
+    # def data_dump(self, output_root, cur_timestamp):
+    #     if self.data is not None:
+    #         # 创建保存数据的目录（如果不存在）
+    #         os.makedirs(output_root, exist_ok=True)
+    #         # 构造保存文件的路径
+    #         save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}.pkl')
+    #
+    #         # 将数据保存到文件
+    #         with open(save_path, 'wb') as file:
+    #             pickle.dump(self.data, file)
+    #
+    #         print(f'Saved Semantic Lidar data to {save_path}')
+    #     else:
+    #         print('No Semantic Lidar data to save.')
 
-
-    def data_extend(self, points, obj_tag):
-        self.points.extend(points)
-        self.obj_tag.extend(obj_tag)
-
-
-# 第四个字母 U 表示第四个属性的数据类型为无符号整数（Unsigned Integer）。这是点云的第四个属性的数据类型，通常用于表示颜色信息，例如RGB颜色值。
-    def data_dump_back_first(self, output_root, cur_timestamp, sensor_name):
+    # def data_dump(self, output_root, cur_timestamp):
+    #     ''' save semantic lidar as .ply'''
+    #     if self.points is not None:
+    #         # 创建保存数据的目录（如果不存在）
+    #         os.makedirs(output_root, exist_ok=True)
+    #         # 构造保存文件的路径
+    #         save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}.ply')
+    #
+    #         # 将点云数据保存为PLY文件
+    #         with open(save_path, 'w') as file:
+    #             # 写入PLY文件头部
+    #             file.write("ply\n")
+    #             file.write("format ascii 1.0\n")
+    #             file.write("element vertex {}\n".format(len(self.points)))
+    #             file.write("property float x\n")
+    #             file.write("property float y\n")
+    #             file.write("property float z\n")
+    #             file.write("property float tag\n")
+    #             file.write("end_header\n")
+    #
+    #             # 写入点云数据
+    #             for point, tag in zip(self.points, self.obj_tag):
+    #                 x, y, z = point
+    #                 # 将点坐标和tag写入文件
+    #                 file.write("{} {} {} {}\n".format(x, y, z, tag))
+    #
+    #         print(f'Saved Semantic Lidar data to {save_path}')
+    #     else:
+    #         print('No Semantic Lidar data to save.')
+    def data_dump_head(self, output_root, cur_timestamp, sensor_name):
         '''save semantic lidar as .pcd'''
-        if True:  # self.points is not None:
+        if True:#self.points is not None:
             # 创建保存数据的目录（如果不存在）
             os.makedirs(output_root, exist_ok=True)
             # 构造保存文件的路径
-            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}_point.pcd')
+            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}.pcd')
             # if sensor_name =="lidarfront":
             # 写入点云数据
-            # 将点云数据保存为pcd文件
-            save_label_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}_label.json')
-            curr_label_dict = {'labels': []}
+    # 将点云数据保存为pcd文件
             with open(save_path, 'w') as file:
                 # 写入pcd文件头部
                 file.write("# .PCD v0.7 - Point Cloud Data file format\n")
                 file.write("VERSION 0.7\n")
                 file.write("FIELDS x y z rgb\n")
                 file.write("SIZE 4 4 4 4\n")
-                file.write("TYPE F F F I\n")
+                file.write("TYPE F F F F\n")
+                file.write("COUNT 1 1 1 1\n")
+                file.write("WIDTH {}\n".format(len(self.points)))
+                file.write("HEIGHT 1\n")
+                file.write("VIEWPOINT 0 0 0 1 0 0 0\n")
+                file.write("POINTS {}\n".format(len(self.points)))
+                file.write("DATA ascii\n")
+
+                for point, tag in zip(self.points, self.obj_tag):
+                    x, y, z = point
+                    # 将点坐标和tag写入文件
+                    file.write("{} {} {} {}\n".format(x + 6.0 + 0.5, y, z - 0.099, tag))
+
+            print(f'Saved Semantic Lidar data to {save_path}')
+
+    def data_dump_front(self, output_root, cur_timestamp, sensor_name):
+        '''save semantic lidar as .pcd'''
+        if True:#self.points is not None:
+            # 创建保存数据的目录（如果不存在）
+            os.makedirs(output_root, exist_ok=True)
+            # 构造保存文件的路径
+            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}.pcd')
+            # if sensor_name =="lidarfront":
+            # 写入点云数据
+    # 将点云数据保存为pcd文件
+            with open(save_path, 'w') as file:
+                # 写入pcd文件头部
+                file.write("# .PCD v0.7 - Point Cloud Data file format\n")
+                file.write("VERSION 0.7\n")
+                file.write("FIELDS x y z rgb\n")
+                file.write("SIZE 4 4 4 4\n")
+                file.write("TYPE F F F F\n")
+                file.write("COUNT 1 1 1 1\n")
+                file.write("WIDTH {}\n".format(len(self.points)))
+                file.write("HEIGHT 1\n")
+                file.write("VIEWPOINT 0 0 0 1 0 0 0\n")
+                file.write("POINTS {}\n".format(len(self.points)))
+                file.write("DATA ascii\n")
+
+                for point, tag in zip(self.points, self.obj_tag):
+                    x, y, z = point
+                    # 将点坐标和tag写入文件
+                    file.write("{} {} {} {}\n".format(x + 6.0 + 0.5, y, z - 0.099, tag))
+
+            print(f'Saved Semantic Lidar data to {save_path}')
+
+    def data_dump_back(self, output_root, cur_timestamp, sensor_name):
+        '''save semantic lidar as .pcd'''
+        if True:  # self.points is not None:
+            # 创建保存数据的目录（如果不存在）
+            os.makedirs(output_root, exist_ok=True)
+            # 构造保存文件的路径
+            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}.pcd')
+            # if sensor_name =="lidarfront":
+            # 写入点云数据
+            # 将点云数据保存为pcd文件
+            with open(save_path, 'w') as file:
+                # 写入pcd文件头部
+                file.write("# .PCD v0.7 - Point Cloud Data file format\n")
+                file.write("VERSION 0.7\n")
+                file.write("FIELDS x y z rgb\n")
+                file.write("SIZE 4 4 4 4\n")
+                file.write("TYPE F F F U\n")
                 file.write("COUNT 1 1 1 1\n")
                 file.write("WIDTH {}\n".format(len(self.points)))
                 file.write("HEIGHT 1\n")
@@ -188,67 +286,7 @@ class SemanticLidar(BaseSensor):
                 for point, tag in zip(self.points, self.obj_tag):
                     x, y, z = point
                     # 将点坐标和tag写入文件
-                    curr_label_dict['labels'].append(int(tag))
-                    file.write("{} {} {} {}\n".format(-x+9.0, -y, z-0.89, tag)) # -x+11.5 9.0
-            with open(save_label_path, 'w') as json_file:
-                json.dump(curr_label_dict, json_file)
-            print(f'Saved Semantic Lidar data to {save_path}')
-
-    def data_dump_left(self, output_root, cur_timestamp, sensor_name):
-        '''save semantic lidar as .pcd'''
-        if True:#self.points is not None:
-            # 创建保存数据的目录（如果不存在）
-            os.makedirs(output_root, exist_ok=True)
-            # 构造保存文件的路径
-            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}_point.pcd')
-            # if sensor_name =="lidarfront":
-            # 写入点云数据
-    # 将点云数据保存为pcd文件
-            save_label_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}_label.json')
-            curr_label_dict = {'labels': []}
-            with open(save_path, 'w') as file:
-                # 写入pcd文件头部
-                file.write("# .PCD v0.7 - Point Cloud Data file format\n")
-                file.write("VERSION 0.7\n")
-                file.write("FIELDS x y z rgb\n")
-                file.write("SIZE 4 4 4 4\n")
-                file.write("TYPE F F F I\n")
-                file.write("COUNT 1 1 1 1\n")
-                file.write("WIDTH {}\n".format(len(self.points)))
-                file.write("HEIGHT 1\n")
-                file.write("VIEWPOINT 0 0 0 1 0 0 0\n")
-                file.write("POINTS {}\n".format(len(self.points)))
-                file.write("DATA ascii\n")
-            #     for point, tag in zip(self.points, self.obj_tag):
-            #         x, y, z = point
-            #         # 将点坐标和tag写入文件
-            #         file.write("{} {} {} {}\n".format(x+3.0, y, z-0.89, tag))
-            #
-            # print(f'Saved Semantic Lidar data to {save_path}')
-
-                # 定义旋转角度（100度）
-                angle = np.radians(100)
-
-                # 定义旋转矩阵
-                rotation_matrix = np.array([
-                    [np.cos(angle), -np.sin(angle), 0],
-                    [np.sin(angle), np.cos(angle), 0],
-                    [0, 0, 1]
-                ])
-
-                # 执行点云旋转
-                rotated_point_cloud = np.dot(self.points, rotation_matrix.T)
-
-                for point, tag in zip(rotated_point_cloud, self.obj_tag):
-                    x, y, z = point
-                    # 将点坐标和tag写入文件
-                    curr_label_dict['labels'].append(int(tag))
-                    file.write("{} {} {} {}\n".format(x + 0.49, y+6.3, z - 0.099, tag))
-                    # 0.49 = 50.034358978271484 - 49.54359817504883
-                    # 0.315 = 139.88629150390625-  139.5711669921875
-                    # -0.099 = 1.8329250812530518 - 1.9321409463882446
-            with open(save_label_path, 'w') as json_file:
-                json.dump(curr_label_dict, json_file)
+                    file.write("{} {} {} {}\n".format(x - 6.0 + 0.5, y, z- 0.099, tag))
             print(f'Saved Semantic Lidar data to {save_path}')
 
     def data_dump_right(self, output_root, cur_timestamp, sensor_name):
@@ -257,34 +295,26 @@ class SemanticLidar(BaseSensor):
             # 创建保存数据的目录（如果不存在）
             os.makedirs(output_root, exist_ok=True)
             # 构造保存文件的路径
-            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}_point.pcd')
+            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}.pcd')
             # if sensor_name =="lidarfront":
             # 写入点云数据
             # 将点云数据保存为pcd文件
-            save_label_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}_label.json')
-            curr_label_dict = {'labels': []}
             with open(save_path, 'w') as file:
                 # 写入pcd文件头部
                 file.write("# .PCD v0.7 - Point Cloud Data file format\n")
                 file.write("VERSION 0.7\n")
                 file.write("FIELDS x y z rgb\n")
                 file.write("SIZE 4 4 4 4\n")
-                file.write("TYPE F F F I\n")
+                file.write("TYPE F F F U\n")
                 file.write("COUNT 1 1 1 1\n")
                 file.write("WIDTH {}\n".format(len(self.points)))
                 file.write("HEIGHT 1\n")
                 file.write("VIEWPOINT 0 0 0 1 0 0 0\n")
                 file.write("POINTS {}\n".format(len(self.points)))
                 file.write("DATA ascii\n")
-                #     for point, tag in zip(self.points, self.obj_tag):
-                #         x, y, z = point
-                #         # 将点坐标和tag写入文件
-                #         file.write("{} {} {} {}\n".format(x+3.0, y, z-0.89, tag))
-                #
-                # print(f'Saved Semantic Lidar data to {save_path}')
 
                 # 定义旋转角度（100度）
-                angle = np.radians(-100)
+                angle = np.radians(0)
 
                 # 定义旋转矩阵
                 rotation_matrix = np.array([
@@ -299,47 +329,80 @@ class SemanticLidar(BaseSensor):
                 for point, tag in zip(rotated_point_cloud, self.obj_tag):
                     x, y, z = point
                     # 将点坐标和tag写入文件
-                    curr_label_dict['labels'].append(int(tag))
-                    file.write("{} {} {} {}\n".format(x + 0.49, y - 6.3, z - 0.099, tag))
+                    file.write("{} {} {} {}\n".format(x+0.51, y -6.0, z - 0.099, tag))
                     # 0.49 = 50.034358978271484 - 49.54359817504883
                     # 0.315 = 139.88629150390625-  139.5711669921875
                     # -0.099 = 1.8329250812530518 - 1.9321409463882446
-            with open(save_label_path, 'w') as json_file:
-                json.dump(curr_label_dict, json_file)
             print(f'Saved Semantic Lidar data to {save_path}')
 
-    def data_dump_front_last(self, output_root, cur_timestamp, sensor_name):
+    def data_dump_left(self, output_root, cur_timestamp, sensor_name):
         '''save semantic lidar as .pcd'''
         if True:  # self.points is not None:
             # 创建保存数据的目录（如果不存在）
             os.makedirs(output_root, exist_ok=True)
             # 构造保存文件的路径
-            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}_point.pcd')
+            save_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}.pcd')
             # if sensor_name =="lidarfront":
             # 写入点云数据
             # 将点云数据保存为pcd文件
-            save_label_path = os.path.join(output_root, f'semantic_lidar_data_{cur_timestamp}_{sensor_name}_label.json')
-            curr_label_dict = {'labels': []}
             with open(save_path, 'w') as file:
                 # 写入pcd文件头部
                 file.write("# .PCD v0.7 - Point Cloud Data file format\n")
                 file.write("VERSION 0.7\n")
                 file.write("FIELDS x y z rgb\n")
                 file.write("SIZE 4 4 4 4\n")
-                file.write("TYPE F F F I\n")
+                file.write("TYPE F F F U\n")
                 file.write("COUNT 1 1 1 1\n")
                 file.write("WIDTH {}\n".format(len(self.points)))
                 file.write("HEIGHT 1\n")
                 file.write("VIEWPOINT 0 0 0 1 0 0 0\n")
                 file.write("POINTS {}\n".format(len(self.points)))
                 file.write("DATA ascii\n")
-                for point, tag in zip(self.points, self.obj_tag):
-                    x, y, z = point
-                    # 将点坐标和tag写入文件
-                    curr_label_dict['labels'].append(int(tag))
-                    file.write("{} {} {} {}\n".format(x -8.0, y, z - 0.4, tag)) # -9.0
-            with open(save_label_path, 'w') as json_file:
-                json.dump(curr_label_dict, json_file)
+
+                # 定义旋转角度（100度）
+                angle = np.radians(0) #-100
+
+                # 定义旋转矩阵
+                rotation_matrix = np.array([
+                    [np.cos(angle), -np.sin(angle), 0],
+                    [np.sin(angle), np.cos(angle), 0],
+                    [0, 0, 1]
+                ])
+
+                # # 执行点云旋转
+                if True:
+                    rotated_point_cloud = np.dot(self.points, rotation_matrix.T)
+
+                    for point, tag in zip(rotated_point_cloud, self.obj_tag):
+                        x, y, z = point
+                        # 将点坐标和tag写入文件
+                        file.write("{} {} {} {}\n".format(x + 0.51, y +6.0, z - 0.099, tag))
+
+                        # 0.51 = 50.05268478393555 - 49.54359817504883
+                        # -0.2845 = 139.2865753173828-  139.5711669921875
+                        # -0.099 = 1.832974910736084 - 1.9321409463882446
+
+
+                else:
+                    # for point, tag in zip(rotated_point_cloud, self.obj_tag):
+                    for point, tag in zip(self.points, self.obj_tag):
+                        x, y, z = point
+                        x = x + 0.51
+                        y = y - 0.2845 +6.3
+                        z = z - 0.099
+
+                        point = np.asarray([x, y, z])
+
+                        rotated_point_cloud = np.dot(point, rotation_matrix.T)
+
+                        # 将点坐标和tag写入文件
+
+                        file.write(
+                            "{} {} {} {}\n".format(rotated_point_cloud[0], rotated_point_cloud[1], rotated_point_cloud[2], tag))
+
+                    # 0.49 = 50.034358978271484 - 49.54359817504883
+                    # 0.315 = 139.88629150390625-  139.5711669921875
+                    # -0.099 = 1.8329250812530518 - 1.9321409463882446
 
             print(f'Saved Semantic Lidar data to {save_path}')
         else:

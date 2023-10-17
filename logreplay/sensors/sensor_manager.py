@@ -89,38 +89,12 @@ class SensorManager:
             if not os.path.exists(output_folder):
                 os.makedirs(output_folder)
 
-            if sensor_name == "semantic_lidarbackfirst":
-                sensor_instance.data_dump_back_first(output_folder,
-                                      cur_timestamp, sensor_name)
 
-            if sensor_name == "semantic_lidarleft":
-                sensor_instance.data_dump_left(output_folder,
+            if sensor_name == "depth_camera":
+                sensor_instance.data_dump_depth_head(output_folder,
                                   cur_timestamp, sensor_name)
-
-            if sensor_name == "semantic_lidarright":
-                sensor_instance.data_dump_right(output_folder,
-                                  cur_timestamp, sensor_name)
-
-            if sensor_name == "semantic_lidarfrontlast":
-                sensor_instance.data_dump_front_last(output_folder,
-                                                cur_timestamp, sensor_name)
-
-
-            # if sensor_name == "semantic_lidarfront":
-            #     sensor_instance.data_dump_frontver3(output_folder,
-            #                       cur_timestamp, sensor_name)
-            #
-            # if sensor_name == "semantic_lidarbackver3":
-            #     sensor_instance.data_dump_backver3(output_folder,
-            #                       cur_timestamp, sensor_name)
-            #
-            # if sensor_name == "semantic_lidarrightver3":
-            #     sensor_instance.data_dump_rightver3(output_folder,
-            #                           cur_timestamp, sensor_name)
-            #
-            # if sensor_name == "semantic_lidarleftver3":
-            #     sensor_instance.data_dump_leftver3(output_folder,
-            #                                     cur_timestamp, sensor_name)
+            else:
+                print("Error!")
 
     def destroy(self):
         for sensor_instance in self.sensor_list:

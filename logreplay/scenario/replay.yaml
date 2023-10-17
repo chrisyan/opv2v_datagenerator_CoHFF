@@ -30,32 +30,18 @@ map: # corresponding to bev map
 
 sensor: # new attached sensor
   sensor_list:
-    - name: 'semantic_lidar'
-      args: &base_semantic_lidar
-        upper_fov: 2 #2
-        lower_fov: -25 #-25
-        channels: 64
-        rotation_frequency: 20
-        points_per_second: 1300000
-        range: 50
-        relative_pose: left
-        thresh: 5 # mininum number of points hit to be regarded as visible
-    - name: 'semantic_lidar'
+    - name: 'bev_semantic_camera'
       args:
-        <<: *base_semantic_lidar
-        relative_pose: backfirst
-    - name: 'semantic_lidar'
+        visualize: true
+        fov: 45
+        image_size_x: 512
+        image_size_y: 512
+        height: 115.88
+
+    - name: 'depth_camera'
       args:
-        <<: *base_semantic_lidar
-        relative_pose: frontlast
-    - name: 'semantic_lidar'
-      args:
-        <<: *base_semantic_lidar
-        relative_pose: right
-#    - name: 'bev_semantic_camera'
-#      args:
-#        visualize: true
-#        fov: 45
-#        image_size_x: 512
-#        image_size_y: 512
-#        height: 115.88
+        #visualize: true
+        fov: 90
+        image_size_x: 800
+        image_size_y: 600
+        height: 0.9

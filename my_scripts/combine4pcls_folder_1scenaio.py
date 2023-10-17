@@ -11,17 +11,12 @@ print(f"脚本开始运行时间: {time.ctime(start_time)}")
 # 定义主文件夹路径
 main_folder_path  = "/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train/additional/2021_08_23_20_47_11"
 
+
+
 # 使用正则表达式匹配文件名
-pattern = (r"semantic_lidar_data_(\d+)_semantic_lidar"
-           r"(frontlast_label.json"
-           r"|backfirst_label.json"
-           r"|left_label.json"
-           r"|right_label.json"
-           r"|frontlast_point.pcd"
-           r"|backfirst_point.pcd"
-           r"|left_point.pcd"
-           r"|right_point.pcd)"
-           )
+pattern = r"semantic_lidar_data_(\d+)_semantic_lidar(frontlast|backfirst|left|right)_point\.pcd"
+
+
 
 # 定义递归函数来搜索文件夹中的PCD文件
 def search_pcd_files(folder_path):
@@ -47,37 +42,18 @@ for subfolder in os.listdir(main_folder_path):
                 file_dict[file_number] = {}
             file_dict[file_number][front_or_back] = front_back_pair
 
-        # ############################################# Block for merging labels #############################################
 
-        for file_number, file_pair in file_dict.items():
-            if 'frontlast_label.json' in file_pair and 'backfirst_label.json' in file_pair and 'left_label.json' in file_pair and 'right_label.json' in file_pair:
-                # create a list of files for labels
-                json_files = [file_pair['frontlast_label.json'],
-                              file_pair['backfirst_label.json'],
-                              file_pair['left_label.json'],
-                              file_pair['right_label.json']]
-                # load labels in each semantic lidar
-                # init one dict for merging
-                merged_label_dict = {"labels": []}
-                # init one file for label
-                merged_label_path = subfolder_path + "/" + file_number + "_semantic_label.json"
-                for json_file in json_files:
-                    with open(json_file, 'r') as f:
-                        curr_labels = json.load(f)
-                        merged_label_dict['labels'].extend(curr_labels['labels'])
-                # save merged labels
-                with open(merged_label_path, 'w') as json_file:
-                    json.dump(merged_label_dict, json_file)
-        # ############################################# Block for merging labels #############################################
 
         # 遍历字典，执行合并操作
         for file_number, file_pair in file_dict.items():
+
+
             # 检查是否有匹配的front和back文件
-            if 'frontlast_point.pcd' in file_pair and 'backfirst_point.pcd' in file_pair and 'left_point.pcd' in file_pair and 'right_point.pcd' in file_pair:
-                front_pcd = file_pair['frontlast_point.pcd']
-                back_pcd = file_pair['backfirst_point.pcd']
-                left_pcd = file_pair['left_point.pcd']
-                right_pcd = file_pair['right_point.pcd']
+            if 'frontlast' in file_pair and 'backfirst' in file_pair and 'left' in file_pair and 'right' in file_pair:
+                front_pcd = file_pair['frontlast']
+                back_pcd = file_pair['backfirst']
+                left_pcd = file_pair['left']
+                right_pcd = file_pair['right']
                 # 在这里执行合并操作
                 # 你可以使用前面的代码示例来合并front和back文件
                 # 打印一些信息以供参考

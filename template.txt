@@ -1,0 +1,15 @@
+
+
+
+
+python opencood/visualization/vis_data_sequence.py [--color_mode ${COLOR_RENDERING_MODE}]
+
+
+mportError: cannot import name 'CUDAEvent' from 'cumm.core_cc.tensorview_bind' (unknown location)
+pip install spconv-cu113
+
+
+------ replay --------
+conda activate opencood
+cd /home/gaiax/cooperative/OpenCOOD_root/OpenCOOD/logreplay
+python scenario/scenarios_manager.py

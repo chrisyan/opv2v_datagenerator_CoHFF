@@ -1,0 +1,24 @@
+                # 执行点云旋转
+                # rotated_point_cloud = np.dot(self.points, rotation_matrix.T)
+
+                # for point, tag in zip(rotated_point_cloud, self.obj_tag):
+                for point, tag in zip(self.points, self.obj_tag):
+                    x, y, z = point
+                    x = x + 0.49
+                    y = y + 6.3
+                    z = z - 0.099
+
+                    point = np.asarray([x,y,z])
+
+                    rotated_point_cloud = np.dot(point, rotation_matrix.T)
+
+
+
+
+                    # 将点坐标和tag写入文件
+
+                    file.write("{} {} {} {}\n".format(rotated_point_cloud[0],rotated_point_cloud[1],rotated_point_cloud[2], tag))
+                    line_count += 1
+                    # 0.49 = 50.034358978271484 - 49.54359817504883
+                    # 0.315 = 139.88629150390625-  139.5711669921875
+                    # -0.099 = 1.8329250812530518 - 1.9321409463882446

@@ -2,6 +2,7 @@ import open3d as o3d
 import numpy as np
 
 from label import trainId2label
+import matplotlib as plt
 
 # 定义类别到颜色的映射字典
 classes = {
@@ -28,9 +29,9 @@ classes = {
     20: [170, 120, 50],  # Dynamic
     21: [45, 60, 150],  # Water
     22: [145, 170, 100],  # Terrain
-    23: [255,255,0], # 'ReflectorPost'
-    24: [139,0,0], # 'Barrier'
-    25: [255,0,255] #  'TrafficCone'
+    23: [255, 255, 0], # 'ReflectorPost'
+    24: [255, 51, 51], # 'Barrier'
+    25: [0, 255, 0] #  'TrafficCone'
 }
 
     # 'ReflectorPost','Barrier', 'TrafficCone'
@@ -54,7 +55,7 @@ def get_class_channel(file_path):
         class_labels.append(rgb)
 
     # 打印提取的RGB值
-    print("RGB Values:", class_labels)
+    #print("RGB Values:", class_labels)
     unique_values = np.unique(class_labels)
 
     print("unique_values: ", unique_values)
@@ -79,9 +80,9 @@ def semantics_to_colors(semantics):
 
 
 if __name__ == "__main__":
-    #lidar = "raw_lidar"
+    lidar = "raw_lidar"
     #lidar = "semantic_lidar"
-    lidar = "both"
+    #lidar = "both"
     #frame_number = "000077"
 
     if lidar == "raw_lidar":
@@ -89,9 +90,8 @@ if __name__ == "__main__":
         # 读取PCD文件
         #pcd2 = o3d.io.read_point_cloud("{}.pcd".format(frame_number))
 
-        #pcd2 = o3d.io.read_point_cloud("/home/gaiax/Downloads/Desktop/semantic_merged_000070_3161.pcd")
-        pcd2 = o3d.io.read_point_cloud(
-            "/home/gaiax/cooperative/OpenCOOD_root/OpenCOOD/my_scripts/rak_semantic/000018_raw.pcd")
+        pcd2 = o3d.io.read_point_cloud("/home/gaiax/cooperative/OpenCOOD_root/OpenCOOD/my_scripts/point_cloud.pcd")
+       # pcd2 = o3d.io.read_point_cloud("/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train/2021_08_23_20_47_11/109/000078.pcd")
 
         # 可以使用以下代码查看点云数据的一些基本信息
         print(pcd2)
@@ -129,18 +129,25 @@ if __name__ == "__main__":
     if lidar == "both":
         # 调用函数读取PCD文件 merged ### semantic lidar ###
         #file_path = "semantic_lidar_data_{}.pcd".format(frame_number)
+        frame_number = "000078"
 
-        #file_path = "/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train/additional/2021_08_23_20_47_11/109/semantic_lidar_data_000084_semantic_lidarfrontlast.pcd"
+        #file_path = "/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train/additional_final/2021_08_23_20_47_11/109/{}_semantic.pcd".format(frame_number)
+        #semantic_lidar_data_000070_semantic_lidarfront.pcd
+        # 000070_semantic
 
-        file_path = "/home/gaiax/cooperative/OpenCOOD_root/OpenCOOD/my_scripts/rak_semantic/000018.pcd"
+        file_path = "/home/gaiax/cooperative/OpenCOOD_root/OpenCOOD/my_scripts/test.pcd"
 
 
         pcd = read_pcd(file_path)
         class_labels = get_class_channel(file_path)
-        print("class_labels: ",class_labels)
+        #print("class_labels: ",class_labels)
         unique_values_class_labels = np.unique(class_labels)
-
         print("unique_values_class_labels:", unique_values_class_labels)
+
+        # count number of one class
+        value_to_count = 30
+        count = np.count_nonzero(class_labels == value_to_count)
+        print(f"before值 {value_to_count} 的数量是 {count}")
 
         # 获取点云数据
         points = np.asarray(pcd.points)
@@ -162,7 +169,7 @@ if __name__ == "__main__":
 
         # 读取PCD文件 ### raw lidar ###
         #pcd2 = o3d.io.read_point_cloud("{}.pcd".format(frame_number))
-        pcd2 = o3d.io.read_point_cloud("/home/gaiax/cooperative/OpenCOOD_root/OpenCOOD/my_scripts/rak_semantic/000018_raw.pcd")
+        pcd2 = o3d.io.read_point_cloud("/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train/2021_08_23_20_47_11/109/{}.pcd".format(frame_number))
 
         # 可以使用以下代码查看点云数据的一些基本信息
         print(pcd2)
@@ -171,6 +178,7 @@ if __name__ == "__main__":
 
         # 可视化点云数据
         o3d.visualization.draw_geometries([pcd, pcd2])
+        #plt.save(pcd)
 
 
 
