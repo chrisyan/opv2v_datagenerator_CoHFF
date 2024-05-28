@@ -89,74 +89,25 @@ class SensorManager:
             if not os.path.exists(output_folder):
                 os.makedirs(output_folder)
 
-
-
             if sensor_name == "semantic_lidarhead":
                 sensor_instance.data_dump_head(output_folder,
-                                  cur_timestamp, sensor_name)
-
-            elif sensor_name == "semantic_lidarfront1a":
-                sensor_instance.data_dump_front1a(output_folder,
-                                  cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarfront2a":
-                sensor_instance.data_dump_front2a(output_folder,
-                                  cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarfront3a":
-                sensor_instance.data_dump_front3a(output_folder,
-                                  cur_timestamp, sensor_name)
-
-            elif sensor_name == "semantic_lidarfront1b":
-                sensor_instance.data_dump_front1b(output_folder,
-                                  cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarfront2b":
-                sensor_instance.data_dump_front2b(output_folder,
-                                  cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarfront3b":
-                sensor_instance.data_dump_front3b(output_folder,
-                                  cur_timestamp, sensor_name)
-
-            elif sensor_name == "semantic_lidarleft1a":
-                sensor_instance.data_dump_left1a(output_folder,
-                                                cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarleft2a":
-                sensor_instance.data_dump_left2a(output_folder,
-                                                cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarrighta":
-                sensor_instance.data_dump_righta(output_folder,
                                       cur_timestamp, sensor_name)
 
-            elif sensor_name == "semantic_lidarleft1b":
-                sensor_instance.data_dump_left1b(output_folder,
-                                                cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarleft2b":
-                sensor_instance.data_dump_left2b(output_folder,
-                                                cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarrightb":
-                sensor_instance.data_dump_rightb(output_folder,
+            if sensor_name == "semantic_lidarfront":
+                sensor_instance.data_dump_front(output_folder,
                                       cur_timestamp, sensor_name)
 
-            elif sensor_name == "semantic_lidarback1a":
-                sensor_instance.data_dump_back1a(output_folder,
-                                  cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarback2a":
-                sensor_instance.data_dump_back2a(output_folder,
-                                  cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarback3a":
-                sensor_instance.data_dump_back3a(output_folder,
+            if sensor_name == "semantic_lidarright":
+                sensor_instance.data_dump_right(output_folder,
                                   cur_timestamp, sensor_name)
 
-            elif sensor_name == "semantic_lidarback1b":
-                sensor_instance.data_dump_back1b(output_folder,
-                                  cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarback2b":
-                sensor_instance.data_dump_back2b(output_folder,
-                                  cur_timestamp, sensor_name)
-            elif sensor_name == "semantic_lidarback3b":
-                sensor_instance.data_dump_back3b(output_folder,
+            if sensor_name == "semantic_lidarback":
+                sensor_instance.data_dump_back(output_folder,
                                   cur_timestamp, sensor_name)
 
-            else:
-                print("Error!")
+            if sensor_name == "semantic_lidarleft":
+                sensor_instance.data_dump_left(output_folder,
+                                                cur_timestamp, sensor_name)
 
     def destroy(self):
         for sensor_instance in self.sensor_list:

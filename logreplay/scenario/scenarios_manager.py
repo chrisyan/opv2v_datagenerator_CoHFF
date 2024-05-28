@@ -76,21 +76,9 @@ if __name__ == '__main__':
 
     from opencood.hypes_yaml.yaml_utils import load_yaml
     #scene_params = load_yaml('./hypes_yaml/replay.yaml')
-    scene_params = load_yaml('./replay.yaml')
+    scene_params = load_yaml('./replay_18.yaml')
     scenarion_manager = ScenariosManager(scenario_params=scene_params)
     scenarion_manager.tick()
     print('test passed')
 
-    end_time = time.time()
-    script_end_time = time.ctime(end_time)
-    script_run_time = (end_time - start_time)//60
-
-    # 将时间信息保存到以脚本开始时间命名的文本文件
-    file_name = f"开始时间_{start_time}.txt"
-    with open(file_name, "w") as file:
-        file.write(f"脚本开始运行时间: {script_start_time}\n")
-        file.write(f"脚本结束运行时间: {script_end_time}\n")
-        file.write(f"脚本运行总时间: {script_run_time} min\n")
-
-    print(f"时间信息已保存到文件: {file_name}")
 

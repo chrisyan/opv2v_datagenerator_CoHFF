@@ -1,5 +1,5 @@
-root_dir: '/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train' # your original opv2v dataset
-output_dir: '/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train/additional' # the new folder to save the dumped new data
+root_dir: '/xxx/OpenCOOD_root/opv2v_data_dumping/train' # your original opv2v dataset
+output_dir: '/xxx/OpenCOOD_root/opv2v_data_dumping/train/additional' # the new folder to save the dumped new data
 map: # corresponding to bev map
   activate: true # whether activate HDMap module
   visualize: true # whether to visualize the BEV Map for each CAV
