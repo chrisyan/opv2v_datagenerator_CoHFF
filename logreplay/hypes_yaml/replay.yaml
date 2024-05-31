@@ -1,15 +1,15 @@
-root_dir: '/xxx/OpenCOOD_root/opv2v_data_dumping/train' # your original opv2v dataset
-output_dir: '/xxx/OpenCOOD_root/opv2v_data_dumping/train/additional' # the new folder to save the dumped new data
+root_dir: '/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train' # your original opv2v dataset
+output_dir: '/home/gaiax/cooperative/OpenCOOD_root/opv2v_data_dumping/train/additional' # the new folder to save the dumped new data
 map: # corresponding to bev map
   activate: true # whether activate HDMap module
   visualize: true # whether to visualize the BEV Map for each CAV
 
   save_yml: false # whether to save the map meta data in yaml files
   save_static: false # whether to dump road segmentation mask
-  save_lane: true # whether to dump lane segmentation mask
-  save_dynamic: true # whether to dump dynamic object BEV segmentaition mask
-  save_bev_vis: true # whether to dump the BEV visualization image that has all elements
-  save_bev_sem: true # whether to dump the BEV semantic mask that contains all elements
+  save_lane: false # whether to dump lane segmentation mask
+  save_dynamic: false # whether to dump dynamic object BEV segmentaition mask
+  save_bev_vis: false # whether to dump the BEV visualization image that has all elements
+  save_bev_sem: false # whether to dump the BEV semantic mask that contains all elements
 
   radius: 50 # the BEV Map range, e.g., 50 means a square around the ego whose side length is 100
   raster_size: [256, 256] # the dumped BEV images resolution
@@ -25,33 +25,11 @@ map: # corresponding to bev map
   dynamic:
     exclude_self: true # if set to true, ego won't be drawed
     exclude_off_road: true # eclude the objects that are off road
-    visibility: true # whether save visibility mask under ego coordinate. when set to true, semantic lidar has to be implemented
-    visibility_corp: true # whether save visibility mask that can be seen for all cavs. when set to true, semantic lidar has to be implemented
+    visibility: false # whether save visibility mask under ego coordinate. when set to true, semantic lidar has to be implemented
+    visibility_corp: false # whether save visibility mask that can be seen for all cavs. when set to true, semantic lidar has to be implemented
 
 sensor: # new attached sensor
   sensor_list:
-    - name: 'semantic_lidar'
-      args: &base_semantic_lidar
-        upper_fov: 10
-        lower_fov: -60
-        channels: 64
-        rotation_frequency: 20
-        points_per_second: 500000
-        range: 50
-        relative_pose: front
-        thresh: 5 # mininum number of points hit to be regarded as visible
-    - name: 'semantic_lidar'
-      args:
-        <<: *base_semantic_lidar
-        relative_pose: left
-    - name: 'semantic_lidar'
-      args:
-        <<: *base_semantic_lidar
-        relative_pose: right
-    - name: 'semantic_lidar'
-      args:
-        <<: *base_semantic_lidar
-        relative_pose: back
     - name: 'bev_semantic_camera'
       args:
         visualize: true
@@ -59,3 +37,11 @@ sensor: # new attached sensor
         image_size_x: 512
         image_size_y: 512
         height: 115.88
+
+    - name: 'depth_camera'
+      args:
+        #visualize: true
+        fov: 90
+        image_size_x: 800
+        image_size_y: 600
+        height: 0.9

@@ -75,8 +75,7 @@ if __name__ == '__main__':
     script_start_time = time.ctime(start_time)
 
     from opencood.hypes_yaml.yaml_utils import load_yaml
-    #scene_params = load_yaml('./hypes_yaml/replay.yaml')
-    scene_params = load_yaml('./replay_18.yaml')
+    scene_params = load_yaml('./hypes_yaml/replay_4.yaml')
     scenarion_manager = ScenariosManager(scenario_params=scene_params)
     scenarion_manager.tick()
     print('test passed')
